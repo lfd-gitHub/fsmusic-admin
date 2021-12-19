@@ -6,6 +6,6 @@
 	"mem": 0.5,
 	"policyType": "cpu",
 	"policyThreshold": 60,
-	"envParams":[],
+	"envParams":{},
 	"customLogs": "stdout"
 }
