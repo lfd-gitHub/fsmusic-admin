@@ -1,5 +1,6 @@
 <template>
-  <div class="container">Home111</div>
+  <div class="register-page">Register</div>
 </template>
+
 <script setup></script>
 <style lang="scss" scoped></style>
