@@ -6,6 +6,8 @@
 	"mem": 1,
 	"policyType": "cpu",
 	"policyThreshold": 60,
-	"envParams":{},
+	"envParams":{
+		"VITE_API_HOST":"https://springboot-d7qy-1490578-1308849595.ap-shanghai.run.tcloudbase.com"
+	},
 	"customLogs": "stdout"
 }
