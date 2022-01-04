@@ -13,17 +13,43 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["vue", "html", "prettier", "import"],
+  "plugins": [
+    "vue",
+    "html",
+    "prettier",
+    "import"
+  ],
   "rules": {
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
     "prettier/prettier": "error",
-    "vue/multi-word-component-names": "off"
+    "vue/multi-word-component-names": "off",
+    "no-param-reassign": [
+      "error",
+      {
+        "ignorePropertyModificationsFor": [
+          "state"
+        ]
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
       "alias": {
-        "map": [["@", "./src"]],
-        "extensions": [".js", ".vue"]
+        "map": [
+          [
+            "@",
+            "./src"
+          ]
+        ],
+        "extensions": [
+          ".js",
+          ".vue"
+        ]
       }
     }
   }

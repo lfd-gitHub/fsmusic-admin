@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { Notify } from 'quasar';
+import store from '@/store';
 
 const Home = () => import('../pages/Home.vue');
+const Profile = () => import('../pages/user/Profile.vue');
 const NF404 = () => import('../pages/NF404.vue');
 const Login = () => import('../pages/Login.vue');
 const Register = () => import('../pages/Register.vue');
@@ -12,6 +14,11 @@ const routes = [
     alias: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
   },
   {
     path: '/login',
@@ -35,14 +42,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.isAuthWhite === true) {
+  if (to.meta.isAuthWhite === true || store.state.user.token) {
     return next();
   }
   Notify.create({
     message: '请先登陆',
     position: 'top',
   });
-  return next('/login');
+  return next(`/login?redirect=${to.path}`);
 });
 
 export default router;

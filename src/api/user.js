@@ -1,7 +1,7 @@
 import http from './http';
 
 export default {
-  login(data) {
-    return http.post('/login', data);
+  login(username, password) {
+    return http.post('/api/user/login', { username, password });
   },
 };

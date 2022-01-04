@@ -9,16 +9,18 @@
         <q-input
           outlined
           label="用户名"
+          v-model="username"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || '请输入用户名']"
         ></q-input>
         <q-input
           outlined
           label="密码"
+          v-model="password"
           lazy-rules
           :rules="[
             (val) => (val && val.length > 0) || '请输入密码',
-            (val) => val.length < 5 || '请输入6位以上密码',
+            (val) => val.length > 5 || '请输入6位以上密码',
           ]"
         ></q-input>
         <q-checkbox v-model="isKeepLogin" label="保持登陆" />
@@ -40,15 +42,24 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import userApi from '@/api/user';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import log from '@/utils/log';
 
 const router = useRouter();
+const route = useRoute();
+const store = useStore();
+const username = ref('lfd');
+const password = ref('');
 const isKeepLogin = ref(false);
 async function doLogin() {
-  const resp = await userApi.login();
-  if (resp != null) {
-    router.push({ path: '/home' });
+  const result = await store.dispatch('user/login', {
+    username: `${username.value}`,
+    password: `${password.value}`,
+  });
+  if (result) {
+    log.d(`route = ${route.query.redirect}`);
+    router.push({ path: route.query.redirect || '/' });
   }
 }
 function toRegister() {
