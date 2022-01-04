@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
     return next();
   }
   Notify.create({
-    message: '请先登陆',
+    message: '请先登录',
     position: 'top',
   });
   return next(`/login?redirect=${to.path}`);

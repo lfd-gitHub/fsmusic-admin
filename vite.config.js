@@ -18,5 +18,21 @@ export default ({ mode }) => {
         sassVariables: 'src/quasar-variables.sass',
       }),
     ],
+    css: {
+      postcss: {
+        plugins: [
+          {
+            postcssPlugin: 'internal:charset-removal',
+            AtRule: {
+              charset: (atRule) => {
+                if (atRule.name === 'charset') {
+                  atRule.remove();
+                }
+              },
+            },
+          },
+        ],
+      },
+    },
   });
 };

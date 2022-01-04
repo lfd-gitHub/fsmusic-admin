@@ -23,9 +23,9 @@
             (val) => val.length > 5 || '请输入6位以上密码',
           ]"
         ></q-input>
-        <q-checkbox v-model="isKeepLogin" label="保持登陆" />
+        <q-checkbox v-model="isKeepLogin" label="保持登录" />
         <div>
-          <q-btn label="登陆" type="submit" color="primary" />
+          <q-btn label="登录" type="submit" color="primary" />
           <q-btn
             label="注册"
             @click="toRegister"

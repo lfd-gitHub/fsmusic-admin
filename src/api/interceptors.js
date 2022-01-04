@@ -12,14 +12,15 @@ export default function addIntercepts(http, store, router, Notify) {
   http.interceptors.response.use(
     (resp) => resp?.data,
     (err) => {
-      log.d(`[interceptors] - ${JSON.stringify(err)}`);
+      log.d(`[interceptors] - ${err.response.status}`);
       const status = err?.status;
+      const msg = err?.response?.data?.errorMsg;
       if (status === 401 || status === 403) {
-        Notify.create('请先登陆');
+        Notify.create(msg ?? '请先登录');
         router.push({ path: '/login' });
+        return;
       }
-      const msg = err?.response?.data?.data?.errMsg ?? '请求失败';
-      Notify.create(`${msg}`);
+      Notify.create(`${msg ?? '请求失败'}`);
     }
   );
 }
