@@ -1,9 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { Notify } from 'quasar';
 import store from '@/store';
+import { Notify } from 'quasar';
+import { createRouter, createWebHistory } from 'vue-router';
 
 const Home = () => import('../pages/Home.vue');
-const Profile = () => import('../pages/user/Profile.vue');
+const Dashboard = () => import('../pages/dashboard/Index.vue');
+const UserManager = () => import('../pages/user/Index.vue');
 const NF404 = () => import('../pages/NF404.vue');
 const Login = () => import('../pages/Login.vue');
 const Register = () => import('../pages/Register.vue');
@@ -14,11 +15,20 @@ const routes = [
     alias: '/',
     name: 'Home',
     component: Home,
-  },
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: Profile,
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        meta: { title: '控制台', icon: 'dashboard' },
+        component: Dashboard,
+      },
+      {
+        path: 'user',
+        name: 'User',
+        meta: { title: '用户管理', icon: 'manage_accounts' },
+        component: UserManager,
+      },
+    ],
   },
   {
     path: '/login',

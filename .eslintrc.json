@@ -20,6 +20,8 @@
     "import"
   ],
   "rules": {
+    "import/order": "off",
+    "vue/no-v-model-argument": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -39,6 +41,11 @@
   },
   "settings": {
     "import/resolver": {
+      "node": {
+        "extensions": [
+          ".css"
+        ]
+      },
       "alias": {
         "map": [
           [

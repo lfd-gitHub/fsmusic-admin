@@ -41,10 +41,10 @@
 </template>
 
 <script setup>
+import log from '@/utils/log';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import log from '@/utils/log';
 
 const router = useRouter();
 const route = useRoute();

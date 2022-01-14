@@ -14,7 +14,8 @@ const actions = {
   async login({ commit }, { username, password }) {
     const resp = await userApi.login(username, password);
     if (resp?.data != null) {
-      const token = resp.data;
+      const { token } = resp.data;
+      log.d(token);
       cache.keepToken(token);
       commit('SET_TOKEN', resp.data);
     }

@@ -10,17 +10,28 @@ export default function addIntercepts(http, store, router, Notify) {
     return c;
   });
   http.interceptors.response.use(
-    (resp) => resp?.data,
+    (resp) => {
+      log.tag('resp');
+      log.d(resp);
+      log.tag('resp');
+      return resp?.data;
+    },
     (err) => {
-      log.d(`[interceptors] - ${err.response.status}`);
-      const status = err?.status;
-      const msg = err?.response?.data?.errorMsg;
-      if (status === 401 || status === 403) {
-        Notify.create(msg ?? '请先登录');
-        router.push({ path: '/login' });
-        return;
+      if (err.response) {
+        log.d(`[interceptors] - ${err.response}`);
+        const status = err?.status;
+        const msg = err?.response?.data?.errorMsg;
+        if (status === 401 || status === 403) {
+          Notify.create(msg ?? '请先登录');
+          router.push({ path: '/login' });
+          return;
+        }
+      } else if (err.request) {
+        log.d(err);
+      } else {
+        log.d(err);
       }
-      Notify.create(`${msg ?? '请求失败'}`);
+      Notify.create('请求失败');
     }
   );
 }

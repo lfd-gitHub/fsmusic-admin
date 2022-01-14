@@ -1,14 +1,12 @@
-import { createApp } from 'vue';
-import { Quasar, Notify } from 'quasar';
-import router from '@/router';
-import store from '@/store';
 import http from '@/api/http';
 import addIntercepts from '@/api/interceptors';
-
-import '@quasar/extras/material-icons/material-icons.css';
-import 'quasar/src/css/index.sass';
-
 import App from '@/App.vue';
+import router from '@/router';
+import store from '@/store';
+import '@quasar/extras/material-icons/material-icons.css';
+import { Notify, Quasar } from 'quasar';
+import 'quasar/src/css/index.sass';
+import { createApp } from 'vue';
 
 createApp(App)
   .use(Quasar, { plugins: { Notify } }) //
