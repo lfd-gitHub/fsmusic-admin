@@ -17,6 +17,7 @@
           outlined
           label="密码"
           v-model="password"
+          type="password"
           lazy-rules
           :rules="[
             (val) => (val && val.length > 0) || '请输入密码',

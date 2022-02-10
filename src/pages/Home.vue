@@ -6,7 +6,7 @@
           <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
           <q-toolbar-title> 全栈音乐后台 </q-toolbar-title>
           <q-space />
-          <q-avatar size="24px" color="orange"> L </q-avatar>
+          <q-avatar size="24px" color="orange"> {{ firstNickname }} </q-avatar>
           <div style="width: 10px" />
           <q-btn
             size="12px"
@@ -44,7 +44,7 @@
 </template>
 <script setup>
 import log from '@/utils/log';
-import { ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -68,5 +68,11 @@ async function logout() {
   await store.dispatch('user/logout');
   router.push({ path: '/login' });
 }
+const firstNickname = computed(() => store.getters['user/nicknameFirstWord']);
+
+onMounted(async () => {
+  await store.dispatch('user/fetchUser');
+  log.d('fnickname = ', store.getters['user/nicknameFirstWord']);
+});
 </script>
 <style lang="scss" scoped></style>
