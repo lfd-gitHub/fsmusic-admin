@@ -18,19 +18,23 @@ export default function addIntercepts(http, store, router, Notify) {
     },
     (err) => {
       if (err.response) {
-        log.d(`[interceptors] - ${err.response}`);
-        const status = err?.status;
+        log.d(`[interceptors] -`, err);
+        const status = err?.response?.status;
         const msg = err?.response?.data?.errorMsg;
         if (status === 401 || status === 403) {
-          Notify.create(msg ?? '请先登录');
+          store.dispatch('user/logout');
           router.push({ path: '/login' });
-          return;
         }
-      } else if (err.request) {
+        Notify.create(msg ?? '请先登录');
+        return;
+      }
+
+      if (err.request) {
         log.d(err);
       } else {
         log.d(err);
       }
+
       Notify.create('请求失败');
     }
   );

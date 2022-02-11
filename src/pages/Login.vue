@@ -50,8 +50,8 @@ import { useStore } from 'vuex';
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
-const username = ref('lfd');
-const password = ref('');
+const username = ref('test');
+const password = ref('123456');
 const isKeepLogin = ref(false);
 async function doLogin() {
   const result = await store.dispatch('user/login', {
@@ -59,8 +59,11 @@ async function doLogin() {
     password: `${password.value}`,
   });
   if (result) {
-    log.d(`route = ${route.query.redirect}`);
-    router.push({ path: route.query.redirect || '/' });
+    const user = await store.dispatch('user/fetchUser');
+    if (user) {
+      log.d(`route = ${route.query.redirect}`);
+      router.push({ path: route.query.redirect || '/' });
+    }
   }
 }
 function toRegister() {

@@ -1,10 +1,11 @@
 import userApi from '@/api/user';
 import cache from '@/store/cache';
 import log from '@/utils/log';
+import { Notify } from 'quasar';
 
 const state = {
   token: cache.getToken(),
-  me: null,
+  me: cache.getMe(),
 };
 
 const getters = {
@@ -15,8 +16,17 @@ const actions = {
     const resp = await userApi.me();
     const user = resp?.data;
     if (user) {
-      cache.keepMe(user);
-      commit('SET_ME', user);
+      const isAdmin = user.roles?.some((item) => item.name === 'ROLE_ADMIN');
+      log.d(`isAdmin = ${isAdmin}`);
+      if (isAdmin) {
+        cache.keepMe(user);
+        commit('SET_ME', user);
+      } else {
+        cache.keepToken('');
+        cache.keepMe(null);
+        Notify.create('没有权限');
+        return null;
+      }
     }
     return user;
   },

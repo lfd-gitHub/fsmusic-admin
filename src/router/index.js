@@ -52,7 +52,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.isAuthWhite === true || store.state.user.token) {
+  if (to.meta.isAuthWhite === true) {
+    return next();
+  }
+  if (store.state.user.token && store.state.user.me) {
     return next();
   }
   Notify.create({
