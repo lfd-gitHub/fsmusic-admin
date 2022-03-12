@@ -7,6 +7,9 @@ export default {
   me() {
     return http.get('/api/user/me');
   },
+  create(username, password) {
+    return http.post('/api/user', { username, password });
+  },
   login(username, password) {
     return http.post('/api/token', { username, password });
   },

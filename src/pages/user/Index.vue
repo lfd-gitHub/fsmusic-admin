@@ -8,7 +8,6 @@
       v-model:pagination="pagination"
       @request="onLoadData"
       :loading="loading"
-      hide-pagination
     >
       <template v-slot:top>
         <q-btn color="primary" :disable="loading" icon="add" @click="addRow" />
@@ -21,7 +20,7 @@
       </template>
     </q-table>
 
-    <div class="q-pa-lg flex flex-center">
+    <!-- <div class="q-pa-lg flex flex-center">
       <div class="q-pa-lg flex flex-center">
         <q-pagination
           v-model="pagination.page"
@@ -35,24 +34,27 @@
           @click="onLoadData"
         />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup>
 import userApi from '@/api/user';
+import CreateDialog from '@/pages/user/CreateDialog.vue';
 import log from '@/utils/log';
+import { useQuasar } from 'quasar';
 import { onMounted, reactive, ref } from 'vue';
 
+const $q = useQuasar();
 const loading = ref(false);
 const pagination = ref({
   sortBy: 'desc',
   descending: false,
   page: 0,
-  rowsPerPage: 2,
+  rowsPerPage: 3,
   rowsNumber: 0,
 });
-const pagesNumber = ref(3);
+
 const list = reactive({
   filter: '',
   rows: [],
@@ -81,26 +83,49 @@ list.columns = [
     label: '可用',
   },
 ];
-function addRow() {}
-async function onLoadData() {
-  const { page } = pagination.value;
-  log.d('page = ', page);
+async function loadData(page, rowsPerPage) {
+  const tempRowsPerPage = rowsPerPage ?? pagination.value.rowsPerPage;
+  const tempPage = page ?? pagination.value.page;
+
+  log.d(`temp page = ${tempPage} , perRow = ${tempRowsPerPage}`);
   loading.value = true;
   const resp = await userApi.list({
-    page: page - 1,
-    size: 5,
+    page: tempPage - 1,
+    size: tempRowsPerPage,
+    sort: `createTime,${pagination.value.sortBy}`,
   });
   loading.value = false;
-  list.rows = resp?.data?.content ?? [];
+  const datas = resp?.data.content ?? [];
+  list.rows = datas; //= tempPage <= 1 ? datas : list.rows.concat(datas);
   const p = resp?.data?.number ?? 0;
   pagination.value.page = p + 1;
-  pagination.value.rowsPerPage = resp?.data?.content?.length ?? 0;
-  pagination.value.rowsNumber = resp?.data?.numberOfElements ?? 0;
-  const pn = resp?.data?.totalPages ?? 0;
-  pagesNumber.value = pn <= 1 ? 0 : pn;
+  pagination.value.rowsPerPage =
+    resp?.data?.pageable?.pageSize ?? tempRowsPerPage;
+  pagination.value.rowsNumber = resp?.data?.totalElements ?? 0;
+
+  log.d('rows = ', list.rows);
+  log.d('pagination = ', pagination.value);
 }
+function addRow() {
+  log.d('ADDROW ->');
+  const dialog = $q
+    .dialog({
+      component: CreateDialog,
+    })
+    .onOk((r) => {
+      if (r) loadData();
+    });
+  log.d(dialog);
+}
+
+function onLoadData(ops) {
+  const { rowsPerPage, page } = ops.pagination;
+  log.d(`ops = `, ops);
+  loadData(page, rowsPerPage);
+}
+
 onMounted(() => {
-  onLoadData();
+  loadData();
 });
 </script>
 <style lang="scss" scoped></style>

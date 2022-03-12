@@ -6,6 +6,9 @@ import { defineConfig, loadEnv } from 'vite';
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
   return defineConfig({
+    // build: {
+    //   sourcemap: mode === 'development',
+    // },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),

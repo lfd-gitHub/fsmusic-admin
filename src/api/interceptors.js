@@ -1,12 +1,16 @@
 import log from '@/utils/log';
+import utils from '@/utils/utils';
 
-export default function addIntercepts(http, store, router, Notify) {
+export default function addIntercepts(http, store, router) {
   http.interceptors.request.use((config) => {
     const c = config;
     const { token } = store.state.user;
     if (token) {
       c.headers.Authorization = `Bearer ${token}`;
     }
+    log.tag('req');
+    log.d(config);
+    log.tag('req');
     return c;
   });
   http.interceptors.response.use(
@@ -25,7 +29,7 @@ export default function addIntercepts(http, store, router, Notify) {
           store.dispatch('user/logout');
           router.push({ path: '/login' });
         }
-        Notify.create(msg ?? '请先登录');
+        utils.showErr(msg ?? '请先登录');
         return;
       }
 
@@ -35,7 +39,7 @@ export default function addIntercepts(http, store, router, Notify) {
         log.d(err);
       }
 
-      Notify.create('请求失败');
+      utils.showErr('请求失败');
     }
   );
 }

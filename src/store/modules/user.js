@@ -1,7 +1,7 @@
 import userApi from '@/api/user';
 import cache from '@/store/cache';
 import log from '@/utils/log';
-import { Notify } from 'quasar';
+import utils from '@/utils/utils';
 
 const state = {
   token: cache.getToken(),
@@ -24,7 +24,7 @@ const actions = {
       } else {
         cache.keepToken('');
         cache.keepMe(null);
-        Notify.create('没有权限');
+        utils.showErr('没有权限');
         return null;
       }
     }

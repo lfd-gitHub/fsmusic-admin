@@ -1,5 +1,6 @@
 import store from '@/store';
-import { Notify } from 'quasar';
+import log from '@/utils/log';
+import utils from '@/utils/utils';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const Home = () => import('../pages/Home.vue');
@@ -52,16 +53,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  log.d(`#Route#beforeEach ${from} => ${to}`);
   if (to.meta.isAuthWhite === true) {
     return next();
   }
   if (store.state.user.token && store.state.user.me) {
     return next();
   }
-  Notify.create({
-    message: '请先登录',
-    position: 'top',
-  });
+  utils.showWarn('请先登录');
   return next(`/login?redirect=${to.path}`);
 });
 
