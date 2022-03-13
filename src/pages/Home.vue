@@ -52,15 +52,15 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 const leftDrawerOpen = ref(true);
-const cur = route.matched.filter((item) => item.path === '/')[0];
-const menu = cur.children.map((item) => ({
+const rootRoute = router.getRoutes().filter((item) => item.path === '/')[0];
+log.tag('home');
+log.tag(rootRoute);
+log.tag('home');
+const menu = rootRoute.children?.map((item) => ({
   ...item.meta,
   path: item.path,
   name: item.name,
 }));
-log.tag('home');
-log.d(menu, route.path);
-log.tag('home');
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }

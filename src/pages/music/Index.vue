@@ -23,8 +23,8 @@
 </template>
 
 <script setup>
-import userApi from '@/api/user';
-import CreateDialog from '@/pages/user/CreateDialog.vue';
+import musicApi from '@/api/music';
+import CreateDialog from '@/pages/music/CreateDialog.vue';
 import log from '@/utils/log';
 import { useQuasar } from 'quasar';
 import { onMounted, reactive, ref } from 'vue';
@@ -38,42 +38,21 @@ const pagination = ref({
   rowsPerPage: 3,
   rowsNumber: 0,
 });
-
 const list = reactive({
   filter: '',
   rows: [],
-  columns: [],
+  columns: [
+    { field: 'id', label: 'ID', style: 'width:50px' },
+    { field: 'name', label: 'Name' },
+    { field: 'description', label: 'Desc' },
+  ],
 });
-list.columns = [
-  {
-    field: 'id',
-    label: 'ID',
-    style: 'width:50px',
-  },
-  {
-    field: 'username',
-    label: '用户名',
-  },
-  {
-    field: 'nickname',
-    label: '昵称',
-  },
-  {
-    field: 'locked',
-    label: '锁定',
-  },
-  {
-    field: 'enabled',
-    label: '可用',
-  },
-];
 async function loadData(page, rowsPerPage) {
   const tempRowsPerPage = rowsPerPage ?? pagination.value.rowsPerPage;
   const tempPage = page ?? pagination.value.page;
-
   log.d(`temp page = ${tempPage} , perRow = ${tempRowsPerPage}`);
   loading.value = true;
-  const resp = await userApi.list({
+  const resp = await musicApi.list({
     page: tempPage - 1,
     size: tempRowsPerPage,
     sort: `createTime,${pagination.value.sortBy}`,
@@ -90,6 +69,12 @@ async function loadData(page, rowsPerPage) {
   log.d('rows = ', list.rows);
   log.d('pagination = ', pagination.value);
 }
+
+function onLoadData(ops) {
+  const { rowsPerPage, page } = ops.pagination;
+  log.d(`ops = `, ops);
+  loadData(page, rowsPerPage);
+}
 function addRow() {
   log.d('ADDROW ->');
   const dialog = $q
@@ -101,13 +86,6 @@ function addRow() {
     });
   log.d(dialog);
 }
-
-function onLoadData(ops) {
-  const { rowsPerPage, page } = ops.pagination;
-  log.d(`ops = `, ops);
-  loadData(page, rowsPerPage);
-}
-
 onMounted(() => {
   loadData();
 });

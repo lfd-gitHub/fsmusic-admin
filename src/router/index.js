@@ -9,12 +9,14 @@ const UserManager = () => import('../pages/user/Index.vue');
 const NF404 = () => import('../pages/NF404.vue');
 const Login = () => import('../pages/Login.vue');
 const Register = () => import('../pages/Register.vue');
+const Music = () => import('../pages/music/Index.vue');
 
 const routes = [
   {
     path: '/home',
     alias: '/',
     name: 'Home',
+    redirect: '/dashboard',
     component: Home,
     children: [
       {
@@ -28,6 +30,12 @@ const routes = [
         name: 'User',
         meta: { title: '用户管理', icon: 'manage_accounts' },
         component: UserManager,
+      },
+      {
+        path: '/music',
+        name: 'Music',
+        meta: { title: '音乐管理', icon: 'music_note' },
+        component: Music,
       },
     ],
   },
