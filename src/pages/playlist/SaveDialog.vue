@@ -5,11 +5,14 @@
       <div class="q-pa-md" style="max-width: 400px">
         <div class="q-gutter-md">
           <q-card-section>
-            <div class="text-h6">添加音乐</div>
+            <div class="text-h6">
+              {{ `${isEdit ? '修改' : '添加'}音乐列表` }}
+            </div>
           </q-card-section>
 
           <q-input filled v-model="info.name" label="名称" />
           <q-input filled v-model="info.description" label="描述" />
+          <uploader label="文件上传" v-model:file="info.file" />
 
           <q-card-actions align="right">
             <q-btn
@@ -27,24 +30,27 @@
 </template>
 
 <script>
-import musicApi from '@/api/music';
+import playlistApi from '@/api/playlist';
+import Uploader from '@/components/uploader/Uploader.vue';
 import utils from '@/utils/utils';
 import { useDialogPluginComponent } from 'quasar';
 import { reactive, ref } from 'vue';
 
 export default {
-  name: 'CreateDialog',
+  name: 'SaveDialog',
   props: {
-    // ...your custom props
+    data: {
+      type: Object,
+      default: () => null,
+    },
   },
-
   emits: [
     // REQUIRED; need to specify some events that your
     // component will emit through useDialogPluginComponent()
     ...useDialogPluginComponent.emits,
   ],
-
-  setup() {
+  setup(props) {
+    utils.logd('[SaveDialog] props => ', props);
     // REQUIRED; must be called inside of setup()
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent();
@@ -55,39 +61,43 @@ export default {
     //                    example: onDialogOK({ /*.../* }) - with payload
     // onDialogCancel - Function to call to settle dialog with "cancel" outcome
     const loading = ref(false);
-    const info = reactive({
-      name: '',
-      description: '',
-    });
-
-    async function addUser() {
+    const isEdit = ref(!!props.data?.id);
+    const info = reactive(
+      props.data || {
+        name: '',
+        description: '',
+        file: null,
+      }
+    );
+    async function save() {
       loading.value = true;
       await utils.sleep(5000);
-      const resp = await musicApi.create(info.name, info.description);
+      const resp = isEdit.value
+        ? await playlistApi.update(props.data.id, info)
+        : await playlistApi.create(info);
       if (resp) {
-        utils.showOk('添加成功');
+        utils.showOk(isEdit.value ? '修改成功' : '添加成功');
         onDialogOK(true);
       } else {
         loading.value = false;
       }
     }
-
     return {
+      isEdit,
       loading,
       info,
       dialogRef,
       onDialogHide,
       onDialogOK,
-
       // other methods that we used in our vue html template;
       // these are part of our example (so not required)
       onOKClick() {
-        addUser();
+        save();
       },
-
       // we can passthrough onDialogCancel directly
       onCancelClick: onDialogCancel,
     };
   },
+  components: { Uploader },
 };
 </script>

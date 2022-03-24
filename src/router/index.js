@@ -10,6 +10,7 @@ const NF404 = () => import('../pages/NF404.vue');
 const Login = () => import('../pages/Login.vue');
 const Register = () => import('../pages/Register.vue');
 const Music = () => import('../pages/music/Index.vue');
+const PlayList = () => import('../pages/playlist/Index.vue');
 
 const routes = [
   {
@@ -36,6 +37,12 @@ const routes = [
         name: 'Music',
         meta: { title: '音乐管理', icon: 'music_note' },
         component: Music,
+      },
+      {
+        path: '/playlist',
+        name: 'Playlist',
+        meta: { title: '音乐列表管理', icon: 'playlist_play' },
+        component: PlayList,
       },
     ],
   },

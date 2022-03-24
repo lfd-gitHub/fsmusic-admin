@@ -1,3 +1,6 @@
+## S004 上传文件
+- [cos jssdk文档](https://cloud.tencent.com/document/product/436/11459)
+  - `yarn add cos-js-sdk-v5`  
 ## S003 登录页
 
 - 使用 quasar 表单

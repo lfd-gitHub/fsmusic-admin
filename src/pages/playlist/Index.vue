@@ -66,8 +66,8 @@
 </template>
 
 <script setup>
-import musicApi from '@/api/music';
-import SaveDialog from '@/pages/music/SaveDialog.vue';
+import playlistApi from '@/api/playlist';
+import SaveDialog from '@/pages/playlist/SaveDialog.vue';
 import log from '@/utils/log';
 import { useQuasar } from 'quasar';
 import { onMounted, reactive, ref } from 'vue';
@@ -106,7 +106,7 @@ async function loadData(page, rowsPerPage) {
   const tempPage = page ?? pagination.value.page;
   log.d(`temp page = ${tempPage} , perRow = ${tempRowsPerPage}`);
   loading.value = true;
-  const resp = await musicApi.list({
+  const resp = await playlistApi.list({
     page: tempPage - 1,
     size: tempRowsPerPage,
     sort: `createTime,${pagination.value.sortBy}`,
@@ -156,7 +156,7 @@ function edit(row) {
 
 async function publish(id) {
   log.d(`publish -> id = ${id}`);
-  const resp = await musicApi.publish(id);
+  const resp = await playlistApi.publish(id);
   if (resp) {
     loadData();
   }
@@ -164,7 +164,7 @@ async function publish(id) {
 
 async function close(id) {
   log.d(`close -> id = ${id}`);
-  const resp = await musicApi.close(id);
+  const resp = await playlistApi.close(id);
   if (resp) {
     loadData();
   }

@@ -1,6 +1,8 @@
 import { Notify } from 'quasar';
+import log from './log';
 
 export default {
+  logd: (msg, ...args) => log.d(msg, args),
   showErr(message) {
     Notify.create({
       type: 'negative',
