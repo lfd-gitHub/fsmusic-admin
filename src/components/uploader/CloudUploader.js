@@ -83,7 +83,6 @@ export default createUploaderComponent({
     return {
       isUploading,
       isBusy,
-
       abort,
       upload,
     };

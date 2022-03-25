@@ -4,6 +4,7 @@
       v-if="!file"
       :label="label"
       @file-uploaded="onSuccess"
+      :accept="accept"
       style="width: 100%"
     />
     <q-chip
@@ -14,6 +15,7 @@
       text-color="white"
       icon="cloud_done"
     >
+      <q-icon v-if="'IMAGE' === file.type" :name="'img:' + file.uri" />
       {{ `${file?.name}.${file?.ext}` }}
     </q-chip>
   </div>
@@ -24,6 +26,10 @@ import CloudUploader from './CloudUploader';
 
 // eslint-disable-next-line no-undef
 defineProps({
+  accept: {
+    type: String,
+    default: '',
+  },
   label: {
     type: String,
     default: '',

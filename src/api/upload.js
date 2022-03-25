@@ -6,10 +6,10 @@ import http from './http';
 const sTAG = '[uploadApi]';
 
 function initUpload(info) {
-  return http.post('/api/upload/init', info);
+  return http.post('/api/res/upload/init', info);
 }
 function finishUpload(id) {
-  return http.post(`/api/upload/finish/${id}`);
+  return http.post(`/api/res/upload/finish/${id}`);
 }
 
 function abortUpload(taskInfo) {

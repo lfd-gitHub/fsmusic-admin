@@ -5,12 +5,16 @@
       <div class="q-pa-md" style="max-width: 400px">
         <div class="q-gutter-md">
           <q-card-section>
-            <div class="text-h6">{{ `${isEdit ? '修改' : '添加'}音乐` }}</div>
+            <div class="text-h6">{{ `${isEdit ? '修改' : '添加'}歌手` }}</div>
           </q-card-section>
 
-          <q-input filled v-model="info.name" label="名称" />
-          <q-input filled v-model="info.description" label="描述" />
-          <uploader label="文件上传" v-model:file="info.file" />
+          <q-input filled v-model="info.name" label="名字" />
+          <q-input filled v-model="info.remark" label="备注" />
+          <uploader
+            label="封面图片上传"
+            v-model:file="info.cover"
+            accept="image/*"
+          />
 
           <q-card-actions align="right">
             <q-btn
@@ -28,7 +32,7 @@
 </template>
 
 <script>
-import musicApi from '@/api/music';
+import artistApi from '@/api/artist';
 import Uploader from '@/components/uploader/Uploader.vue';
 import utils from '@/utils/utils';
 import { useDialogPluginComponent } from 'quasar';
@@ -63,15 +67,23 @@ export default {
     const info = reactive(
       props.data || {
         name: '',
-        description: '',
-        file: null,
+        remark: '',
+        cover: null,
       }
     );
-    async function saveMusic() {
+    async function saveArtist() {
       loading.value = true;
+      utils.logd('[Artist-SaveDialog] => saveArtist() => info = ', info);
+      const req = {
+        name: info.name,
+        remark: info.remark,
+      };
+      if (info.cover?.id) {
+        req.coverId = info.cover.id;
+      }
       const resp = isEdit.value
-        ? await musicApi.update(props.data.id, info)
-        : await musicApi.create(info);
+        ? await artistApi.update(props.data.id, req)
+        : await artistApi.create(req);
       if (resp) {
         utils.showOk(isEdit.value ? '修改成功' : '添加成功');
         onDialogOK(true);
@@ -89,7 +101,7 @@ export default {
       // other methods that we used in our vue html template;
       // these are part of our example (so not required)
       onOKClick() {
-        saveMusic();
+        saveArtist();
       },
       // we can passthrough onDialogCancel directly
       onCancelClick: onDialogCancel,

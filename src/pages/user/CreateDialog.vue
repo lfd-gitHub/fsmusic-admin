@@ -67,7 +67,6 @@ export default {
 
     async function addUser() {
       loading.value = true;
-      // await utils.sleep(5000);
       const resp = await userApi.create(info.name, info.password);
       if (resp) {
         utils.showOk('添加成功');

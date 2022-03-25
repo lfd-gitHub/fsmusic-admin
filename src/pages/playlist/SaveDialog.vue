@@ -71,7 +71,6 @@ export default {
     );
     async function save() {
       loading.value = true;
-      await utils.sleep(5000);
       const resp = isEdit.value
         ? await playlistApi.update(props.data.id, info)
         : await playlistApi.create(info);

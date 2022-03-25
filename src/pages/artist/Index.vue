@@ -19,11 +19,18 @@
           </template>
         </q-input>
       </template>
+      <template v-slot:body-cell-cover="props">
+        <q-td :props="props">
+          <q-avatar size="50">
+            <img :src="props.value.uri" />
+          </q-avatar>
+        </q-td>
+      </template>
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
           <q-badge
-            :label="musicStatus[props.value].title"
-            :color="musicStatus[props.value].color"
+            :label="artistStatus[props.value].title"
+            :color="artistStatus[props.value].color"
           />
         </q-td>
       </template>
@@ -51,10 +58,10 @@
                 v-if="props.row.status === 'PUBLISHED'"
                 clickable
                 v-close-popup
-                @click="close(props.row.id)"
+                @click="block(props.row.id)"
               >
                 <q-item-section>
-                  <q-item-label>下架</q-item-label>
+                  <q-item-label>封禁</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -66,9 +73,9 @@
 </template>
 
 <script setup>
-import musicApi from '@/api/music';
-import { musicStatus } from '@/config/dict';
-import SaveDialog from '@/pages/music/SaveDialog.vue';
+import artistApi from '@/api/artist';
+import { artistStatus } from '@/config/dict';
+import SaveDialog from '@/pages/artist/SaveDialog.vue';
 import log from '@/utils/log';
 import { useQuasar } from 'quasar';
 import { onMounted, reactive, ref } from 'vue';
@@ -87,9 +94,11 @@ const list = reactive({
   rows: [],
   columns: [
     { field: 'id', label: 'ID', style: 'width:50px' },
-    { field: 'name', label: '名称' },
-    { field: 'description', label: '描述' },
+    { field: 'name', label: '名字' },
+
+    { field: 'remark', label: '描述' },
     { name: 'status', field: 'status', label: '状态' },
+    { name: 'cover', field: 'cover', label: '封面图片' },
     {
       name: 'operation',
       field: 'operation',
@@ -102,7 +111,7 @@ async function loadData(page, rowsPerPage) {
   const tempPage = page ?? pagination.value.page;
   log.d(`temp page = ${tempPage} , perRow = ${tempRowsPerPage}`);
   loading.value = true;
-  const resp = await musicApi.list({
+  const resp = await artistApi.list({
     page: tempPage - 1,
     size: tempRowsPerPage,
     sort: `createTime,${pagination.value.sortBy}`,
@@ -152,15 +161,15 @@ function edit(row) {
 
 async function publish(id) {
   log.d(`publish -> id = ${id}`);
-  const resp = await musicApi.publish(id);
+  const resp = await artistApi.publish(id);
   if (resp) {
     loadData();
   }
 }
 
-async function close(id) {
-  log.d(`close -> id = ${id}`);
-  const resp = await musicApi.close(id);
+async function block(id) {
+  log.d(`block -> id = ${id}`);
+  const resp = await artistApi.block(id);
   if (resp) {
     loadData();
   }

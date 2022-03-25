@@ -11,6 +11,7 @@ const Login = () => import('../pages/Login.vue');
 const Register = () => import('../pages/Register.vue');
 const Music = () => import('../pages/music/Index.vue');
 const PlayList = () => import('../pages/playlist/Index.vue');
+const ArtistList = () => import('../pages/artist/Index.vue');
 
 const routes = [
   {
@@ -43,6 +44,12 @@ const routes = [
         name: 'Playlist',
         meta: { title: '音乐列表管理', icon: 'playlist_play' },
         component: PlayList,
+      },
+      {
+        path: '/artist',
+        name: 'Artist',
+        meta: { title: '歌手列表管理', icon: 'record_voice_over' },
+        component: ArtistList,
       },
     ],
   },
